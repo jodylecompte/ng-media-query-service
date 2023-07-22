@@ -1,0 +1,20 @@
+{
+  "name": "ng-media-query-service",
+  "version": "1.0.0",
+  "description": "A media query service for Angular applications.",
+  "main": "src/MediaQueryService.ts",
+  "author": "Jody LeCompte",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jodylecompte/ng-media-query-service.git"
+  },
+  "keywords": [],
+  "files": ["src"],
+  "typings": "src/MediaQueryService.ts",
+  "peerDependencies": {
+      "@angular/core": "^16.1.6",
+      "rxjs": "^7.8.1"
+  }
+}
+
