@@ -5,25 +5,35 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MediaQueryService implements OnDestroy {
-  private matchMediaRef: MediaQueryList | null = null;
-  private matchMediaSubject = new BehaviorSubject<boolean>(false);
+  private matchMediaRefs: Record<string, MediaQueryList> = {};
+  private matchMediaSubjects: Record<string, BehaviorSubject<boolean>> = {};
 
-  matchQuery(query: string): void {
-    this.matchMediaRef = window.matchMedia(query);
-    this.matchMediaSubject.next(this.matchMediaRef.matches);
+  getMatchStatus(query: string): Observable<boolean> {
+    if (!this.matchMediaRefs[query]) {
+      const matchMediaRef = window.matchMedia(query);
+      const matchMediaSubject = new BehaviorSubject<boolean>(matchMediaRef.matches);
 
-    this.matchMediaRef.addEventListener('change', this.handleChange);
-  }
+      matchMediaRef.addEventListener('change', (e: MediaQueryListEvent) => {
+        matchMediaSubject.next(e.matches);
+      });
 
-  getMatchStatus(): Observable<boolean> {
-    return this.matchMediaSubject.asObservable();
-  }
+      this.matchMediaRefs[query] = matchMediaRef;
+      this.matchMediaSubjects[query] = matchMediaSubject;
+    }
 
-  private handleChange = (e: MediaQueryListEvent) => {
-    this.matchMediaSubject.next(e.matches);
+    return this.matchMediaSubjects[query].asObservable();
   }
 
   ngOnDestroy(): void {
-    this.matchMediaRef?.removeEventListener('change', this.handleChange);
+    for (const query in this.matchMediaRefs) {
+      if (this.matchMediaRefs.hasOwnProperty(query)) {
+        this.matchMediaRefs[query].removeEventListener('change', this.handleChange);
+      }
+    }
+  }
+
+  private handleChange = (e: MediaQueryListEvent) => {
+    const query = e.media;
+    this.matchMediaSubjects[query].next(e.matches);
   }
 }
