@@ -8,7 +8,7 @@ export class MediaQueryService implements OnDestroy {
   private matchMediaRefs: Record<string, MediaQueryList> = {};
   private matchMediaSubjects: Record<string, BehaviorSubject<boolean>> = {};
 
-  getMatchStatus(query: string): Observable<boolean> {
+  match(query: string): Observable<boolean> {
     if (!this.matchMediaRefs[query]) {
       const matchMediaRef = window.matchMedia(query);
       const matchMediaSubject = new BehaviorSubject<boolean>(matchMediaRef.matches);
