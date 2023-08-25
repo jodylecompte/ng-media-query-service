@@ -1,6 +1,6 @@
 {
   "name": "ng-media-query-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A media query service for Angular applications.",
   "main": "src/MediaQueryService.ts",
   "author": "Jody LeCompte",
